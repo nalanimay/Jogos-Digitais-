@@ -36,7 +36,7 @@ class Menu():
                     if play.checkForInput(self.__position_mouse):
                         Screens(self.__screen).first_phase()
                     if instructions.checkForInput(self.__position_mouse):
-                        pass
+                        Screens(self.__screen).instructions()
                     if sound.checkForInput(self.__position_mouse):
                         Screens(self.__screen).config_sound(is_enabled)
 

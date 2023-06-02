@@ -31,7 +31,7 @@ class Screens():
         background = BackGround()
         protagonist = Character(self.__screen)
         people = People(protagonist)
-        
+
         inimy_1 = Rain(protagonist)
         inimy_2 = Rain(protagonist)
         inimy_3 = Rain(protagonist)
@@ -45,7 +45,7 @@ class Screens():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
-            
+
             if protagonist.life == 0:
                 self.__game_over(protagonist.points)
             protagonist.animate()
@@ -102,5 +102,36 @@ class Screens():
                             pygame.mixer.music.pause()
                         else:
                             pygame.mixer.music.unpause()
+
+            pygame.display.update()
+
+    def instructions(self):
+        title = pygame.font.Font("src/fonts/font.ttf", 40).render("Instruções", True, COLORS["black"])
+        line_1 = pygame.font.Font("src/fonts/font.ttf", 16).render("O objetivo do jogo é desviar dos obstáculos e ", True, COLORS["black"])
+        line_2 = pygame.font.Font("src/fonts/font.ttf", 16).render("salvar as vítimas dessa triste enchente.", True, COLORS["black"]) 
+        line_3 = pygame.font.Font("src/fonts/font.ttf", 16).render("Você deve usar as setas do teclado", True, COLORS["black"])
+        line_4 = pygame.font.Font("src/fonts/font.ttf", 16).render("para salvar as vítimas.", True, COLORS["black"])
+
+        play = Button(pygame.image.load("src/imgs/background_buttom.png"), "Jogar", 640, 520, 1)
+
+        self.__screen.fill(COLORS["primary"])
+        self.__screen.blit(title, (460, 20))
+        self.__screen.blit(line_1, (360, 150))
+        self.__screen.blit(line_2, (360, 200))
+        self.__screen.blit(line_3, (360, 250))
+        self.__screen.blit(line_4, (360, 300))
+
+        play.update(self.__screen)
+
+        running = True
+        while running:
+            self.__position_mouse = pygame.mouse.get_pos()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if play.checkForInput(self.__position_mouse):
+                        self.first_phase()
 
             pygame.display.update()

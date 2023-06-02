@@ -20,12 +20,24 @@ class Character(Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (80, 720 - 80)
 
+        self.vel_y = 0
+        self.is_jumping = False
+        self.jump_start_time = 0
+        self.JUMP_HEIGHT = -10
+        self.MAX_JUMP_TIME = 40
+        self.GRAVITY = 0.5
+
     def to_walk(self):
         self.__walking = True
         if self.index_initial_character > 2:
             self.index_initial_character = 0
         self.index_initial_character += 1
 
+    def to_jump(self):
+        if not self.is_jumping:
+            self.is_jumping = True
+            self.jump_start_time = pygame.time.get_ticks()
+    
     def animate(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:
@@ -34,9 +46,25 @@ class Character(Sprite):
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             self.to_walk()
             self.rect.x += 4.5
+        if keys[pygame.K_SPACE]:
+            self.to_jump()
 
     def update(self):
         if self.__walking is True:
             self.to_walk()
             self.image = self.__sprite_list[int(self.index_initial_character)]
             self.__walking = False
+
+        if self.is_jumping:
+            jump_duration = pygame.time.get_ticks() - self.jump_start_time
+            if jump_duration <= self.MAX_JUMP_TIME:
+                self.vel_y = self.JUMP_HEIGHT
+            else:
+                self.is_jumping = False
+
+        self.rect.y += self.vel_y
+        self.vel_y += self.GRAVITY
+
+        if self.rect.y >= 720 - 100:
+            self.rect.y = 720 - 100
+            self.vel_y = 0
